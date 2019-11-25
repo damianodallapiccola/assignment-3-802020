@@ -1,0 +1,6 @@
+{
+   "mongo_uri":"mongodb+srv://client2:kPnykMcufcVBkVOc@mysimpbdp-coredms-mdbnz.gcp.mongodb.net/test?retryWrites=true&w=majority",
+   "mongo_db_name":"client2",
+   "rabbit_uri": "amqp://vsvgiedg:1T2CYKC2bwIYhKAXN8H1Xn0FNwguWAGB@hawk.rmq.cloudamqp.com/vsvgiedg",
+   "queue": "client2"
+}

@@ -1,0 +1,119 @@
+commit a6fba423daeeb1f4c9713b6c3b3d99f0d1a08a95
+Author: damianodallapiccola <damiano.dallapiccola@gmail.com>
+Date:   Fri Nov 1 12:13:10 2019 +0200
+
+    final fixes
+
+commit 4372754cda90cbbbc7c298d5bceb9dc152f7c278
+Author: damianodallapiccola <damiano.dallapiccola@gmail.com>
+Date:   Fri Nov 1 12:09:40 2019 +0200
+
+    final fixes
+
+commit 3f812f83f8b3fe9524c1550d4905202806e90f2c
+Author: damianodallapiccola <damiano.dallapiccola@gmail.com>
+Date:   Fri Nov 1 12:09:12 2019 +0200
+
+    report updates and fixes
+
+commit bfd27c6477286878a9d2ea715d6cc6ee5e738f7a
+Author: damianodallapiccola <damiano.dallapiccola@gmail.com>
+Date:   Fri Nov 1 12:05:22 2019 +0200
+
+    report updates and fixes
+
+commit f433d0e9556f4e4d4db1da5ad50fea6745739f51
+Author: damianodallapiccola <damiano.dallapiccola@gmail.com>
+Date:   Fri Nov 1 08:55:54 2019 +0200
+
+    report updates and introduction of bonus 1
+
+commit b356912cfde2a9541f0a7d85071be9479cf493a9
+Author: damianodallapiccola <damiano.dallapiccola@gmail.com>
+Date:   Fri Nov 1 08:53:58 2019 +0200
+
+    report updates and introduction of bonus 1
+
+commit b2113fb90095a2b8e7e0b6a2c984c0037487158e
+Author: damianodallapiccola <damiano.dallapiccola@gmail.com>
+Date:   Fri Nov 1 02:37:51 2019 +0200
+
+    report updates
+
+commit 271363fa0f3a75cbdf02d49c95960c29298c4006
+Author: damianodallapiccola <damiano.dallapiccola@gmail.com>
+Date:   Fri Nov 1 02:37:12 2019 +0200
+
+    report updates
+
+commit 5fdc8fdf9d04f32a167379d16d2576cf2c733ea8
+Author: damianodallapiccola <damiano.dallapiccola@gmail.com>
+Date:   Fri Nov 1 00:36:15 2019 +0200
+
+    fixes and report update
+
+commit 70a4e21de8d17b72f42eab8c03366d188cea7dff
+Author: damianodallapiccola <damiano.dallapiccola@gmail.com>
+Date:   Thu Oct 31 22:35:51 2019 +0200
+
+    removed old files, fixes and report update
+
+commit 4b0cb7900e684a8c8032e55c508b1e6802834569
+Author: damianodallapiccola <damiano.dallapiccola@gmail.com>
+Date:   Thu Oct 31 05:42:17 2019 +0200
+
+    improved remove/add processes
+
+commit 1da55331a46df3511b2c76a90266deeba058ac2d
+Author: damianodallapiccola <damiano.dallapiccola@gmail.com>
+Date:   Thu Oct 31 04:20:27 2019 +0200
+
+    API for rabbitMQ
+
+commit 34471dc5ec16c0a42afef20333756bc2b36608fe
+Author: damianodallapiccola <damiano.dallapiccola@gmail.com>
+Date:   Thu Oct 31 04:19:50 2019 +0200
+
+    locust streaming testing
+
+commit 44076e3628609a3c42002deba6a4ff08183613f1
+Author: damianodallapiccola <damiano.dallapiccola@gmail.com>
+Date:   Thu Oct 31 03:04:52 2019 +0200
+
+    streaming ingest function
+
+commit 3bde538f7bd39744563fb7d8ce0334b69e2f9734
+Author: damianodallapiccola <damiano.dallapiccola@gmail.com>
+Date:   Wed Oct 30 17:43:03 2019 +0200
+
+    client configs with json
+
+commit 42eba3a7e376902d56d18df0076e5bfec651b553
+Author: damianodallapiccola <damiano.dallapiccola@gmail.com>
+Date:   Wed Oct 30 17:42:20 2019 +0200
+
+    added client configs (ex.1.1)
+
+commit 00bffd94b20a530ed42784d0c7c39fa9f6ef4956
+Author: damianodallapiccola <damiano.dallapiccola@gmail.com>
+Date:   Wed Oct 30 16:13:14 2019 +0200
+
+    Batch ingestion fixed
+
+commit 4829d5bbfc3fab247ee5654d6004c8cf1ae2522b
+Author: damianodallapiccola <damiano.dallapiccola@gmail.com>
+Date:   Wed Oct 30 03:59:47 2019 +0200
+
+    Ingestion with batch
+
+commit b052e6ba0cabc34b393b8b2e7204c9b4be61d4a0
+Author: damianodallapiccola <damiano.dallapiccola@gmail.com>
+Date:   Wed Oct 30 03:58:48 2019 +0200
+
+    Ingestion with batch
+
+commit 89278e753d48ba3a5ced46f001545d2bebc432d4
+Author: damianodallapiccola <damiano.dallapiccola@gmail.com>
+Date:   Mon Oct 28 01:39:44 2019 +0200
+
+    First commit
