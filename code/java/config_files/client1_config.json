@@ -1,6 +1,0 @@
-{
-   "mongo_uri":"mongodb+srv://client1:UAn60zHBsgXLeqED@mysimpbdp-coredms-mdbnz.gcp.mongodb.net/test?retryWrites=true&w=majority",
-   "mongo_db_name":"client1",
-   "rabbit_uri": "amqp://guest:guest@localhost/",
-   "queue": "client1"
-}

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>customerstreamapp</groupId>
+  <groupId>cs-e4640</groupId>
   <artifactId>customerstreamapp</artifactId>
-  <name>Flink Quickstart Job</name>
-  <version>1.0-SNAPSHOT</version>
-  <url>http://www.myorganization.org</url>
+  <name>Flink CS-E4640 BTS Simple Job</name>
+  <version>0.1-SNAPSHOT</version>
+  <url>https://mycourses.aalto.fi/course/view.php?id=24363</url>
   <build>
     <pluginManagement>
       <plugins>
@@ -88,7 +88,7 @@
               </filters>
               <transformers>
                 <transformer>
-                  <mainClass>customerstreamapp.StreamingJob</mainClass>
+                  <mainClass>fi.aalto.cs.cse4640.CustomerStreamApp</mainClass>
                 </transformer>
               </transformers>
             </configuration>
@@ -131,7 +131,7 @@
     <dependency>
       <groupId>org.apache.flink</groupId>
       <artifactId>flink-java</artifactId>
-      <version>1.6.1</version>
+      <version>1.9.0</version>
       <scope>provided</scope>
       <exclusions>
         <exclusion>
@@ -139,7 +139,7 @@
           <groupId>org.apache.flink</groupId>
         </exclusion>
         <exclusion>
-          <artifactId>flink-shaded-asm</artifactId>
+          <artifactId>flink-shaded-asm-6</artifactId>
           <groupId>org.apache.flink</groupId>
         </exclusion>
         <exclusion>
@@ -159,7 +159,7 @@
     <dependency>
       <groupId>org.apache.flink</groupId>
       <artifactId>flink-streaming-java_2.11</artifactId>
-      <version>1.6.1</version>
+      <version>1.9.0</version>
       <scope>provided</scope>
       <exclusions>
         <exclusion>
@@ -172,6 +172,10 @@
         </exclusion>
         <exclusion>
           <artifactId>flink-shaded-guava</artifactId>
+          <groupId>org.apache.flink</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>flink-core</artifactId>
           <groupId>org.apache.flink</groupId>
         </exclusion>
         <exclusion>
@@ -200,7 +204,7 @@
   <properties>
     <java.version>1.8</java.version>
     <scala.binary.version>2.11</scala.binary.version>
-    <flink.version>1.6.1</flink.version>
+    <flink.version>1.9.0</flink.version>
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.target>${java.version}</maven.compiler.target>

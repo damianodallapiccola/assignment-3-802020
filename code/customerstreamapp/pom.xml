@@ -20,17 +20,17 @@ under the License.
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>customerstreamapp</groupId>
+	<groupId>cs-e4640</groupId>
 	<artifactId>customerstreamapp</artifactId>
-	<version>1.0-SNAPSHOT</version>
+	<version>0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>Flink Quickstart Job</name>
-	<url>http://www.myorganization.org</url>
+	<name>Flink CS-E4640 BTS Simple Job</name>
+	<url>https://mycourses.aalto.fi/course/view.php?id=24363</url>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<flink.version>1.6.1</flink.version>
+		<flink.version>1.9.0</flink.version>
 		<java.version>1.8</java.version>
 		<scala.binary.version>2.11</scala.binary.version>
 		<maven.compiler.source>${java.version}</maven.compiler.source>
@@ -67,11 +67,6 @@ under the License.
 			<scope>provided</scope>
 		</dependency>
 
-		<dependency>
-			<groupId>org.apache.flink</groupId>
-			<artifactId>flink-connector-rabbitmq_2.11</artifactId>
-			<version>1.9.0</version>
-		</dependency>
 		<!-- Add connector dependencies here. They must be in the default scope (compile). -->
 
 		<!-- Example:
@@ -82,6 +77,22 @@ under the License.
 			<version>${flink.version}</version>
 		</dependency>
 		-->
+		<dependency>
+			<groupId>org.apache.flink</groupId>
+			<artifactId>flink-streaming-java_${scala.binary.version}</artifactId>
+			<version>${flink.version}</version>
+			<scope>provided</scope>
+			</dependency>
+			<dependency>
+  		<groupId>org.apache.flink</groupId>
+  		<artifactId>flink-connector-rabbitmq_2.11</artifactId>
+  		<version>1.9.0</version>
+		</dependency>
+		<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-csv</artifactId>
+				<version>1.7</version>
+		</dependency>
 
 		<!-- Add logging framework, to produce console output when running in the IDE. -->
 		<!-- These dependencies are excluded from the application JAR by default. -->
@@ -149,7 +160,7 @@ under the License.
 							</filters>
 							<transformers>
 								<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-									<mainClass>customerstreamapp.StreamingJob</mainClass>
+									<mainClass>fi.aalto.cs.cse4640.CustomerStreamApp</mainClass>
 								</transformer>
 							</transformers>
 						</configuration>
