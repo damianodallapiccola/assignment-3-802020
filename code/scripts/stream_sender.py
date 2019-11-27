@@ -15,7 +15,7 @@ queue = 'data_streaming'
 connection = pika.BlockingConnection(params)
 
 channel = connection.channel()
-channel.queue_declare(queue=queue)
+channel.queue_declare(queue=queue, durable=True)
 
 # channel_report = connection.channel()
 # channel_report.queue_declare(queue="reports")
