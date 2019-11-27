@@ -17,7 +17,8 @@ os.system("python3 mysimbdp-streamingestmanager.py client2 start")
 
 
 
-rabbit_uri = "amqp://vsvgiedg:1T2CYKC2bwIYhKAXN8H1Xn0FNwguWAGB@hawk.rmq.cloudamqp.com/vsvgiedg"
+# rabbit_uri = "amqp://vsvgiedg:1T2CYKC2bwIYhKAXN8H1Xn0FNwguWAGB@hawk.rmq.cloudamqp.com/vsvgiedg"
+rabbit_uri = 'amqp://guest:guest@localhost/'
 params = pika.URLParameters(rabbit_uri)
 queue = "reports"
 connection = pika.BlockingConnection(params)

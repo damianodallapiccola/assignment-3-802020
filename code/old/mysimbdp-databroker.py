@@ -14,7 +14,8 @@ logging.basicConfig(filename= logs_dir_full_path , filemode="a", level= logging.
 
 app = Flask(__name__)
 
-rabbitmq_uri = 'amqp://vsvgiedg:1T2CYKC2bwIYhKAXN8H1Xn0FNwguWAGB@hawk.rmq.cloudamqp.com/vsvgiedg'
+# rabbitmq_uri = 'amqp://vsvgiedg:1T2CYKC2bwIYhKAXN8H1Xn0FNwguWAGB@hawk.rmq.cloudamqp.com/vsvgiedg'
+rabbitmq_uri = 'amqp://guest:guest@localhost/'
 params = pika.URLParameters(rabbitmq_uri)
 
 
