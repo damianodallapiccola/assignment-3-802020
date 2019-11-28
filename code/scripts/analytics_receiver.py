@@ -11,7 +11,7 @@ channel = connection.channel()
 channel.queue_declare(queue=queue)
 
 def callback(ch, method, properties, body):
-    data = json.loads(body)
+    data = body
     # TODO: add logs
     print(data)
 

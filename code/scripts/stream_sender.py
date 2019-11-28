@@ -29,24 +29,12 @@ def main():
     # with open(config_file_path, 'r') as f:
     #     parsed_json = json.load(f)
 
+    with open(file_path) as fp:
+        for cnt, line in enumerate(fp):
+            # sleep(0.005)
+            channel.basic_publish(exchange='', routing_key=queue, body=line)
+            print("Line {}: {}".format(cnt, line))
 
-    with open(file_path) as csv_file:
-        csv_reader = csv.reader(csv_file, delimiter=',')
-        line_count = 0
-        for row in csv_reader:
-            if line_count == 0:
-                line_count += 1
-            else:
-                # data to be sent to api
-                part_id = row[0]
-                ts_date = row[1]
-                ts_time = row[2]
-                room = row[3]
-                json_to_send ={'part_id': int(part_id), 'ts_date': ts_date, 'ts_time': ts_time, 'room': room}
-                sleep(0.1*randint(1, 20))
-                channel.basic_publish(exchange='', routing_key=queue, body=json.dumps(json_to_send))
-                print("Line " + str(line_count) + " published")
-                line_count += 1
 
 
 if __name__ == "__main__":
