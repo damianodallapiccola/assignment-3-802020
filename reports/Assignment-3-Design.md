@@ -98,23 +98,39 @@ It's also possible to train, once a week or month, a machine learning model on t
 ---  
 ## Part 2 - Implementation of streaming analytics
   
-**1)** Explain the implemented structures of the input streaming data and the output result, and the data serialization/deserialization, for the streaming analytics application (customerstreamapp) for customers.
+**1) Explain the implemented structures of the input streaming data and the output result, and the data serialization/deserialization, for the streaming analytics application (customerstreamapp) for customers.**
+
+The input streaming is composed by the observations of the [dataset](https://drive.google.com/file/d/1Im7cRDH6_i319aKNjukBjnL3-ZZ-7hxU/view?usp=sharing). Every record is formatted as a csv line:
+
+```
+"1526389200,1,2.34,142,263,17.3"
+```
+
+The data is sent with the above serialization through the message broker (`data_streaming` queue) and than deserialized by the map function into a Tuple object.
+
+After the elaboration of the data, is serialized again into json format using the following schema:
+```
+{
+   .....TODO when testing 
+}
+```
+Finally, the json record is sent back through the `analytics_streaming` queue and deserialized by the customer for the visualization. In our case, for simplicity, is just printed into the command line.
 
 
 
-**2)** Explain the key logic of functions for processing events/records in customerstreamapp in your implementation.
+**2) Explain the key logic of functions for processing events/records in customerstreamapp in your implementation.** 
+
+The input stream is mapped on a `Tuple6<Integer, Integer, Float, Integer, Integer, Float>`. After that is assigned a Watermark using the timestamp of the data (the first element of the Tupla) , needed because the time used for the windows is the event-time and not the processing-time. Then, the data are divided into differents streams based on the the pickup location (the 4th element of the Tupla -> PULocationID). These streams are analyzed in groups defined by a tumbling windows of 1 hour. For each group of data is extracted the city zone of the pickup (PULocationID), the timestamp of the first and the last events in the window (initial_timestamp and final_timestamp), the total number of passenger during all the travels (total_passengers), the total distance traveled by the driver (total_distance) and the total amount charged to all the clients (total_amount). These information are then sent into a sink (to the message broker).
+
+**3)  Run customer streamapp and show the operation of the customer streamapp with your test environments. Explain the test environments. Discuss the analytics and its performance observations.**
 
 
 
-**3)**  Run customer streamapp and show the operation of the customer streamapp with your test environments. Explain the test environments. Discuss the analytics and its performance observations.
+**4) Present your tests and explain them for the situation in which wrong data is sent from or is within data sources. Report how your implementation deals with that (e.g., exceptions, failures, and decreasing performance). You should test with different error rates.**
 
 
 
-**4)** Present your tests and explain them for the situation in which wrong data is sent from or is within data sources. Report how your implementation deals with that (e.g., exceptions, failures, and decreasing performance). You should test with different error rates.
-
-
-
-**5)** Explain parallelism settings in your implementation and test with different (higher) degrees of parallelism. Report the performance and issues you have observed in your testing environments.
+**5) Explain parallelism settings in your implementation and test with different (higher) degrees of parallelism. Report the performance and issues you have observed in your testing environments.**
 
 
 
