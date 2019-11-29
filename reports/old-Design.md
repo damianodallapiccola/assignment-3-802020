@@ -12,7 +12,8 @@ For this assignment I used Python, RabbitMQ, NiFi and Mongodb. The datasets I ch
 
 Since I used Nifi to implement mysimbdp-fetchdata, I set the previous constraints inside the XML configuration file of NiFi (see properties "File Filter" and ""Maximum File Size" in the picture below).
 
-![](GetFile.png)
+
+
 
 For the customer service profile I defined a json file which contains:
 - the URI for mongodb (with username and password incorporated)
@@ -46,12 +47,12 @@ These files are located here:
 **2)** For this question the solution is implemented using NiFi. Apache NiFi is a software project designed to automate the flow of data between software systems.
 In the picture below is shown the structure of the implemented flow used to move the file from the client folder to mysimbdp.
 
-![](NiFi_structure.png)
+
  
 This flow begins from the client folder, set in 'Input Directory' property of GetFile (as shown in the picture in question 1).
 The flow passes through SplitRecord and UpdateAttribute (see explanation of this componens below, in the second request for the bonus points) reaching PutFile, that will put files in the stage directory (set in 'Directory' property of PutFile, as shown in the picture below).
 
-![](PutFile.png)
+
 
 The stage directory will have a folder for each client:
 ```
@@ -122,7 +123,7 @@ Example of data structure for film.csv:
 ```
 
 **Performance of ingestion**
-![](performance.png)
+
 
 The 2 clients, having similar data and accessing to the same database, have analog results.
 
@@ -191,11 +192,6 @@ It's been developed, using locust, a simple test for the real time ingestion (te
 
 Results:
 
-![](res_locust.png)
-
-
-![](graph_locust.png)
-
 - % Successes = 100%
 - % Failures = 0%
 
@@ -249,7 +245,7 @@ Instead, if a process will have less than 5 requests during the pre-defined time
 
 **1)**
 The architecture will look like the Lambda architecture (in the picture), that is a data-processing architecture designed to handle massive quantities of data by taking advantage of both batch and stream-processing methods.
-![](Lambda_Architecture.png)
+
 In our case the Batch processing will be formed by mysimbdp-fetchdata, mysimbdp-databroker and mysimbdp-batchingestmanager and it will be used to store data.
 Speed (Real-time) Processing will be formed by mysimbdp-streamingestmanager and mysimbdp-dynamicmanager and it will be used for real-time analysis on the data (for example with Spark).
 
@@ -291,7 +287,7 @@ The constraint, defined in the NiFi configuration (showed in the picture below),
 
 
 
-![](split_record.png)
+
 
 Therefore, the system will:
 - move directly all the files with less than 1500 rows (batching).

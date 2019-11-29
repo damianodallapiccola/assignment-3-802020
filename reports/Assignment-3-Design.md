@@ -1,13 +1,13 @@
 
 # Assignment 3 802020  
   
-For this assignment I used Python, RabbitMQ, NiFi and Mongodb. The datasets I chose are the [Indoor Localization Dataset](https://zenodo.org/record/2671590#.XXJahPxRUlU) for client1 and a version mobified by me of [Films Dataset](https://perso.telecom-paristech.fr/eagan/class/igr204/datasets) for client2.  
+For this assignment I used Python, Java, RabbitMQ and Flink. 
   
   
 ---  
 ## Part 1 - Design for streaming analytics  
   
-**1)** Select a dataset suitable for streaming analytics for a customer as a running example (thus the basic unit of the data should be a discrete record/event data). Explain the dataset and at least two different analytics for the customer: (i) a streaming analytics which analyzes streaming data from the customer (customerstreamapp) and (ii) a batch analytics which analyzes historical results outputted by the streaming analytics. The explanation should be at a high level to allow us to understand the data and possible analytics so that, later on, you can implement and use them in answering other questions.
+**1) Select a dataset suitable for streaming analytics for a customer as a running example (thus the basic unit of the data should be a discrete record/event data). Explain the dataset and at least two different analytics for the customer: (i) a streaming analytics which analyzes streaming data from the customer (customerstreamapp) and (ii) a batch analytics which analyzes historical results outputted by the streaming analytics. The explanation should be at a high level to allow us to understand the data and possible analytics so that, later on, you can implement and use them in answering other questions.**
   
 The chosen dataset is a modified version of the Yellow Taxi Trip Records.
 I removed some columns and I keept only 700k lines for testing purposes ([dataset_v1](https://drive.google.com/file/d/1gla8axt2vr7OoQ85O5UXhkbtZk--LYit/view?usp=sharing)). Then, using a script, I changed all the dates&time data into timestamps (seconds elapsed from 1/1/1970) and I also removed the header to simplify the process ([dataset_v2](https://drive.google.com/file/d/1Im7cRDH6_i319aKNjukBjnL3-ZZ-7hxU/view?usp=sharing)). I used this final dataset as collection of events for the stream.
@@ -36,19 +36,20 @@ Result of the analytics:
  * total_distance (int): total distance traveled by the driver
  * total_amount (float): total amount charged to all the clients
 
-ii) batch analytics: every 24 hours the system returns a statistic about the most profitable zones, the most profitable hours, the most profitable days, ...
+ii) batch analytics: every 24 hours the system returns useful statistics such as the most profitable zones, the most profitable hours or the most profitable days.
+
 These anaysis could help to reorganize the distribution of drivers in the city and also the quantity needed during the different hours and days.
 
-It's also possible to train, once a week or month, a machine learning model on the data to make some predictions (I will explain later all the tecnologies used for the implementation).
+It's also possible to train, once a week or month, a machine learning model on the data to make some predictions (For example using Spark with MLlib).
 
 
-**2)** Customers will send data through message brokers/messaging systems which become data stream sources. Discuss and explain the following aspects for the streaming analytics: (i) should the analytics handle keyed or non-keyed data streams for the customer data, and (ii) which types of delivery guarantees should be suitable.  
+**2) Customers will send data through message brokers/messaging systems which become data stream sources. Discuss and explain the following aspects for the streaming analytics: (i) should the analytics handle keyed or non-keyed data streams for the customer data, and (ii) which types of delivery guarantees should be suitable.** 
 
   i) the analytics will handle keyed data streams (keyed by the zone of the pickup, **PULocationID**), allowing also a parallel analysis of the data, since the processing of each data related to a different **PULocationID** is indipendent.
   
-  ii) I will implement at-most-once delivery guarantee because in our case we can accept data losses and we will have also better performances (less resource usage for handle duplicated messagges). Exactly-once delivery guarantee is of course suitable but, since is not strictly necessary, I decided to not implement it to reduce the complexity  and the resources needed.
+  ii) I will implement at-most-once delivery guarantee because in our case we can accept data losses and we will have also better performances (less resource usage for handle duplicated messages). Exactly-once delivery guarantee is of course suitable but, since is not strictly necessary, I decided to not implement it to reduce the complexity  and the resources needed.**
   
-**3)** Given streaming data from the customer (selected before). Explain the following issues:(i) which types of time should be associated with stream sources for the analytics and be considered in stream processing (if the data sources have no timestamps associated with events, then what would be your solution), and (ii) which types of windows should be developed for the analytics (if no window, then why). Explain these aspects and give examples.   
+**3) Given streaming data from the customer (selected before). Explain the following issues:(i) which types of time should be associated with stream sources for the analytics and be considered in stream processing (if the data sources have no timestamps associated with events, then what would be your solution), and (ii) which types of windows should be developed for the analytics (if no window, then why). Explain these aspects and give examples.**   
   
   The dataset chosen has a field called **tpep_pickup_datetime** that represent the timestamp expressed in number of seconds elapsed from 1/1/1970. Since I am going to use a tumbling window of one hour to analyze the streaming, the timestamp is going to be used as the main time for the analysis (the stream is going to be based on the event-time, not on the processing-time).
   
@@ -56,30 +57,45 @@ It's also possible to train, once a week or month, a machine learning model on t
   
   
   
-**4)**  Explain which performance metrics would be important for the streaming analytics for your customer cases.
+**4)  Explain which performance metrics would be important for the streaming analytics for your customer cases.**
  * throughput
  * Loss rate
   
-**5)**  Provide a design of your architecture for the streaming analytics service in which you clarify: customer data sources, mysimbdp message brokers, mysimbdp streaming computing service, customer streaming analytics app, mysimbdp-coredms, and other components, if needed. Explain your choices of technologies for implementing your design and reusability of existing assignment works. Note that the result from customerstreamapp will be sent back to the customer in near real-time.
+**5)  Provide a design of your architecture for the streaming analytics service in which you clarify: customer data sources, mysimbdp message brokers, mysimbdp streaming computing service, customer streaming analytics app, mysimbdp-coredms, and other components, if needed. Explain your choices of technologies for implementing your design and reusability of existing assignment works. Note that the result from customerstreamapp will be sent back to the customer in near real-time.**
   
-  
+  ![](schema_1.png)
   
   In the picture is shown the architecture of the system developed. For semplicity is shown only one customer, but this platform can handle multiple customer. Each customer will have his's own *stream_sender*(simulation of the data coming from every booking) and *analytics_receiver*(receiver of the real-time analysis), two rabbitMQ queue to send and receive data from the analytics and a personalized Flink app to handle his data. The database for the storage will be the same. 
   
-  * **customer data sources**: the data are coming from 
   
   
-  * **mysimbdp message brokers**: 
+  * **customer data source**: the data are coming from a script (`stream_sender.py`) that reads a ```.csv``` [file](https://drive.google.com/file/d/1Im7cRDH6_i319aKNjukBjnL3-ZZ-7hxU/view?usp=sharing). This is a simulation of real data coming each time a customer books a ride. These data are sent to a rabbitMQ queue, called "data_streaming".
   
+  * **mysimbdp message brokers**: the message broker is represented by RabbitMQ. There will be two different queue for the client:
   
-  * **mysimbdp streaming computing service**:
+  * "data_streaming" -> this queue receives all the messages from the customer data source and it will forward them to the streaming analytics service.
+  
+  * "analytics_streaming" -> this queue receives the results of the analytics and it will forward them to the client frontend (`analytics_receiver.py`) where the data will be displayed (in our case printed on the terminal).
+  
+  This service offers also a back pressure mechanism to slow down automatically the stream if the consumer it not able to handle the stream speed.
+  
+  * **mysimbdp streaming computing service**: I decide to use Flink as streaming computing service. It offers what I need, so windowing mechanisms and connectors to rabbitMQ and MongoDB.
+ I chose Flink instead of Spark because Spark adopt micro batches and Flink adopt a continuous flow operative-based streaming model. As far as window criteria, Spark has a time-based window criteria, whereas Flink has record-based or any custom user-defined window criteria. Therefore, Flink is more flexible for streaming applications.
     
   
-  * **customer streaming analytics app**:
+  * **customer streaming analytics app**: This component is a Java application that runs on top of Flink. I decided to use the Tuple object because they are more optimized for this type of computations and also to permit to the client to define the operation to perform on the data without telling us which are the meaning of the data (if they are sensible data). 
   
-  * **mysimbdp-coredms**:
+  * **mysimbdp-coredms**: The results of the analytics could be also stored in a MongoDB database, adding it as another final sink in the Flink application. However, this function is not implemented in the coding part.
+  
+  
+  The components I reused are:
+  * RabbitMQ on CloudAMQP
+  * some readapted code used to write the scripts `stream_sender.py` and `analytics_receiver.py`
+  * MongoDB deployed on Atlas MongoDB (not used in the implementation)
   
   /usr/local/Cellar/apache-flink/1.9.1/libexec/bin/start-cluster.sh
+  
+  set localhost multiple times in the flink files
   
 ---  
 ## Part 2 - Implementation of streaming analytics
@@ -88,7 +104,7 @@ It's also possible to train, once a week or month, a machine learning model on t
 
 
 
-**2)** Explainthekeylogicoffunctionsforprocessingevents/recordsincustomerstreamappin your implementation.
+**2)** Explain the key logic of functions for processing events/records in customerstreamapp in your implementation.
 
 
 

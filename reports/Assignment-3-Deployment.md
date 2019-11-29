@@ -32,7 +32,7 @@ From the ./assignment-2-802020/code/ folder:
 - using the graphical interface at http://localhost:8080/nifi/, load the file called "mysimbdp-fetchdata.xml" (present in the code folder) as a template
 - create a template using the one you just upload
 - run all the services (picture below)
-![](services_to_activate.png)
+
 - run the NiFi flow
 - run 
 ```console
