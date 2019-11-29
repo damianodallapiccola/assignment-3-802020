@@ -1,27 +1,15 @@
 package fi.aalto.cs.cse4640;
 
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVRecord;
-import org.apache.flink.api.common.functions.FilterFunction;
-import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.common.serialization.SimpleStringSchema;
-import org.apache.flink.api.java.functions.KeySelector;
 import org.apache.flink.api.java.tuple.Tuple;
-import org.apache.flink.api.java.tuple.Tuple2;
-import org.apache.flink.api.java.tuple.Tuple4;
 import org.apache.flink.api.java.tuple.Tuple6;
-import org.apache.flink.api.java.utils.ParameterTool;
-import org.apache.flink.core.fs.FileSystem;
-import org.apache.flink.streaming.api.CheckpointingMode;
 import org.apache.flink.streaming.api.TimeCharacteristic;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.functions.timestamps.AscendingTimestampExtractor;
-import org.apache.flink.streaming.api.functions.windowing.ProcessWindowFunction;
 import org.apache.flink.streaming.api.functions.windowing.WindowFunction;
-import org.apache.flink.streaming.api.windowing.assigners.SlidingProcessingTimeWindows;
 import org.apache.flink.streaming.api.windowing.assigners.TumblingEventTimeWindows;
 import org.apache.flink.streaming.api.windowing.time.Time;
 import org.apache.flink.streaming.api.windowing.windows.TimeWindow;
@@ -30,9 +18,6 @@ import org.apache.flink.streaming.connectors.rabbitmq.RMQSource;
 import org.apache.flink.streaming.connectors.rabbitmq.common.RMQConnectionConfig;
 import org.apache.flink.util.Collector;
 
-import java.io.StringReader;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Iterator;
 
 
@@ -42,7 +27,7 @@ public class CustomerStreamApp {
 
         //using flink ParameterTool to parse input parameters
         // final String input_rabbitMQ;
-        final String input_rabbitMQ = "amqp://guest:guest@localhost:5672/";
+        final String input_rabbitMQ = "amqp://vsvgiedg:1T2CYKC2bwIYhKAXN8H1Xn0FNwguWAGB@hawk.rmq.cloudamqp.com/vsvgiedg";
         final String inputQueue = "data_streaming";
         final String outputQueue = "analytics_streaming";
         // the following is for setting up the execution getExecutionEnvironment
@@ -52,23 +37,19 @@ public class CustomerStreamApp {
         //checkpoint can be used for  different levels of message guarantees
         // select one of the following modes
         //final CheckpointingMode checkpointingMode = CheckpointingMode.EXACTLY_ONCE ;
-        final CheckpointingMode checkpointingMode = CheckpointingMode.AT_LEAST_ONCE;
+        //final CheckpointingMode checkpointingMode = CheckpointingMode.AT_LEAST_ONCE;
         //env.enableCheckpointing(1000*60, checkpointingMode);
+
         // define the event time
-        //env.setStreamTimeCharacteristic(TimeCharacteristic.ProcessingTime);
-        //env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
-        //if using EventTime, then we need to assignTimestampsAndWatermarks
-        //now start with the source of data
-
-
+        env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
 
         final RMQConnectionConfig connectionConfig = new 	RMQConnectionConfig.Builder()
-                .setHost("localhost")
-                .setPort(5672)
-                .setUserName("guest")
-                .setPassword("guest")
-                .setVirtualHost("/")
-                //.setUri(input_rabbitMQ)
+//                .setHost("localhost")
+//                .setPort(5672)
+//                .setUserName("guest")
+//                .setPassword("guest")
+//                .setVirtualHost("/")
+                .setUri(input_rabbitMQ)
                 .build();
 
         RMQSource<String> datasource= new RMQSource(
@@ -94,8 +75,7 @@ public class CustomerStreamApp {
         //     0                1                 2                3                4              5
         //PULocationID, initial_timestamp, final_timestamp, total_passengers, total_distance, total_amount
 
-
-        env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
+        // TODO: check if the data are fine with a filter
 
         SingleOutputStreamOperator<Tuple6<Integer, Integer, Float, Integer, Integer, Float>> mapString = datastream.map(new MapFunction<String, Tuple6<Integer, Integer, Float, Integer, Integer, Float>>() {
             @Override
@@ -105,6 +85,9 @@ public class CustomerStreamApp {
                 Tuple6<Integer, Integer, Float, Integer, Integer, Float> out = new
                         Tuple6<>(Integer.parseInt(fieldArray[0]), Integer.parseInt(fieldArray[1]), Float.parseFloat(fieldArray[2]), Integer.parseInt(fieldArray[3]),
                         Integer.parseInt(fieldArray[4]),  Float.parseFloat(fieldArray[5]));
+
+
+
                 return out;
             }
         });
@@ -162,9 +145,8 @@ public class CustomerStreamApp {
                                 "}");
                     }
 
-        });
+        }).setParallelism(4);
 
-        // keyedStream.writeAsText("/outFilePath/" + "/avgspeedfines.csv", FileSystem.WriteMode.OVERWRITE).setParallelism(1);
 
 
         //send the alerts to another channel
@@ -174,43 +156,10 @@ public class CustomerStreamApp {
                 new SimpleStringSchema());
 
         keyedStream.addSink(sink);
-        //use 1 thread to print out the result
-        // keyedStream.print().setParallelism(1);
 
-
-
-
-
-
-
-
-        env.execute("Simple CS-E4640 BTS Flink Application");
+        env.execute("Taxi Flink Application 802020");
 
 
     }
-
-    public static class EventParser implements FlatMapFunction<String, StreamingEvent> {
-
-        @Override
-        public void flatMap(String line, Collector<StreamingEvent> out) throws Exception {
-            CSVRecord record = CSVFormat.RFC4180.withIgnoreHeaderCase().parse(new StringReader(line)).getRecords().get(0);
-            //just for debug
-            System.out.println("Input: " + line);
-
-
-
-
-            //filter all records with isActive =false
-            /*if (Boolean.valueOf(record.get(6))) {
-                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z");
-                Date date = format.parse(record.get(3));
-                BTSAlarmEvent alarm = new BTSAlarmEvent(record.get(0), record.get(1), record.get(2), date, Float.valueOf(record.get(4)), Float.valueOf(record.get(5)));
-                out.collect(alarm);
-
-
-           }*/
-        }
-    }
-
 }
 

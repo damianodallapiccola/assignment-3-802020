@@ -1,7 +1,16 @@
 import pika
-import json
+import os
+import logging
 
-rabbit_uri = 'amqp://guest:guest@localhost/'
+log_format = '%(asctime)s : [%(levelname)s] - %(message)s'
+logs_directory = "../../logs/analytics_receiver.log"
+logs_dir_full_path = os.path.abspath(logs_directory)
+logging.basicConfig(filename= logs_dir_full_path , filemode="a", level= logging.INFO, format=log_format)
+
+
+
+# rabbit_uri = 'amqp://guest:guest@localhost/'
+rabbit_uri = 'amqp://vsvgiedg:1T2CYKC2bwIYhKAXN8H1Xn0FNwguWAGB@hawk.rmq.cloudamqp.com/vsvgiedg'
 params = pika.URLParameters(rabbit_uri)
 queue = 'analytics_streaming'
 
@@ -11,9 +20,8 @@ channel = connection.channel()
 channel.queue_declare(queue=queue)
 
 def callback(ch, method, properties, body):
-    data = body
-    # TODO: add logs
-    print(data)
+    logging.info("Analytics received: {}".format(body))
+    print(body)
 
 channel.basic_consume(queue=queue, on_message_callback=callback, auto_ack=True)
 

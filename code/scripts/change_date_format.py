@@ -1,8 +1,13 @@
 from datetime import datetime
 import sys
 import csv
+import os
+import logging
 
-
+log_format = '%(asctime)s : [%(levelname)s] - %(message)s'
+logs_directory = "../../logs/stream_sender.log"
+logs_dir_full_path = os.path.abspath(logs_directory)
+logging.basicConfig(filename= logs_dir_full_path , filemode="a", level= logging.INFO, format=log_format)
 
 def main():
 
@@ -28,7 +33,7 @@ def main():
                     res = int((a - b).total_seconds())
                     out_file.write(str(res)+"," + t1 +"," +t2+"," +t3+"," +t4+"," +t5+"\n")
 
-
+    logging.info("{} dataset created".format(out_path))
 
 if __name__ == "__main__":
     main()

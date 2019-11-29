@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>cs-e4640</groupId>
   <artifactId>customerstreamapp</artifactId>
-  <name>Flink CS-E4640 BTS Simple Job</name>
+  <name>Flink CS-E4640 Taxi Analytics</name>
   <version>0.1-SNAPSHOT</version>
   <url>https://mycourses.aalto.fi/course/view.php?id=24363</url>
   <build>

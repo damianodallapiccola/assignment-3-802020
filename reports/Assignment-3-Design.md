@@ -110,8 +110,13 @@ The data is sent with the above serialization through the message broker (`data_
 
 After the elaboration of the data, is serialized again into json format using the following schema:
 ```
-{
-   .....TODO when testing 
+{ 
+   "PULocationID":162,
+   "initial_timestamp":1526389200,
+   "final_timestamp":1526390988,
+   "total_passengers":459,
+   "total_distance":607.8198,
+   "total_amount":4434.3013
 }
 ```
 Finally, the json record is sent back through the `analytics_streaming` queue and deserialized by the customer for the visualization. In our case, for simplicity, is just printed into the command line.
@@ -120,19 +125,33 @@ Finally, the json record is sent back through the `analytics_streaming` queue an
 
 **2) Explain the key logic of functions for processing events/records in customerstreamapp in your implementation.** 
 
-The input stream is mapped on a `Tuple6<Integer, Integer, Float, Integer, Integer, Float>`. After that is assigned a Watermark using the timestamp of the data (the first element of the Tupla) , needed because the time used for the windows is the event-time and not the processing-time. Then, the data are divided into differents streams based on the the pickup location (the 4th element of the Tupla -> PULocationID). These streams are analyzed in groups defined by a tumbling windows of 1 hour. For each group of data is extracted the city zone of the pickup (PULocationID), the timestamp of the first and the last events in the window (initial_timestamp and final_timestamp), the total number of passenger during all the travels (total_passengers), the total distance traveled by the driver (total_distance) and the total amount charged to all the clients (total_amount). These information are then sent into a sink (to the message broker).
+The input stream is mapped on a `Tuple6<Integer, Integer, Float, Integer, Integer, Float>`. After that is assigned a Watermark using the timestamp of the data (the first element of the Tupla) , needed because the time used for the windows is the event-time and not the processing-time. Then, the data are divided into differents streams based on the the pickup location (the 4th element of the Tupla -> PULocationID) using the `keyBy`. These streams are analyzed in groups defined by a tumbling windows of 1 hour. For each group of data is extracted:
+ * the city zone of the pickup (PULocationID) -> equal for every entry
+ * the timestamp of the first and the last events in the window (initial_timestamp and final_timestamp) -> searching the min and the max iterating over all the elements
+ * the total number of passenger during all the travels (total_passengers) -> summing the number of passenger over all the elements
+ * the total distance traveled by the driver (total_distance) -> summing the distance value over all the elements
+ * the total amount charged to all the clients (total_amount) -> summing the amount value over all the elements
+ 
+ These information are then sent into a sink (to the message broker).
 
 **3)  Run customer streamapp and show the operation of the customer streamapp with your test environments. Explain the test environments. Discuss the analytics and its performance observations.**
 
-
-
+Analytics returned to the customer by Flink:
+  ![](analytic_rec.png)
 **4) Present your tests and explain them for the situation in which wrong data is sent from or is within data sources. Report how your implementation deals with that (e.g., exceptions, failures, and decreasing performance). You should test with different error rates.**
 
 
 
 **5) Explain parallelism settings in your implementation and test with different (higher) degrees of parallelism. Report the performance and issues you have observed in your testing environments.**
-
-
+  
+  My implementation implements a parallelism of 1 for the data receiving, for the mapping and for the watermark'operations. Than, after the keyBy, the parallelism became equal to 4. All the windows functions are executed in parallel and the parallelism returns to 1 only when the results reach the Sink. The picture below shows the structure of the workflow.
+  
+  ![](flink_parall_4.png)
+  ![](flink4.png)
+  
+  Incrementing the parallelism (as shown in the picture below, reaching a parallelism of 20) the performance are not increasing. Instead, the performance are decreasing. this is due to the fact that the parallelism should be equal to the number of processors available. In my case, 4 is the perfect number because my machine has 4 cores. 
+  ![](flink_20.png)
+  
 
 ## Part 3 - Connection
 
