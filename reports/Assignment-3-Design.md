@@ -59,11 +59,8 @@ It's also possible to train, once a week or month, a machine learning model on t
   
 **4)  Explain which performance metrics would be important for the streaming analytics for your customer cases.**
  
- TODO!
+ In my case, the only useful metric to take onto account would be the throughput. The throughput represent the number of observation that can be processed within a time unit. It is a very useful metrics that can be used to decide when to scale your service.
  
- 
- * Throughput -> only this
- * Latency
   
 **5)  Provide a design of your architecture for the streaming analytics service in which you clarify: customer data sources, mysimbdp message brokers, mysimbdp streaming computing service, customer streaming analytics app, mysimbdp-coredms, and other components, if needed. Explain your choices of technologies for implementing your design and reusability of existing assignment works. Note that the result from customerstreamapp will be sent back to the customer in near real-time.**
   
@@ -89,7 +86,7 @@ It's also possible to train, once a week or month, a machine learning model on t
   
   * **customer streaming analytics app**: This component is a Java application that runs on top of Flink. I decided to use the Tuple object because they are more optimized for this type of computations and also to permit to the client to define the operation to perform on the data without telling us which are the meaning of the data (if they are sensible data). 
   
-  * **mysimbdp-coredms**: The results of the analytics could be also stored in a MongoDB database, adding it as another final sink in the Flink application. However, this function is not implemented in the coding part.
+  * **mysimbdp-coredms**: The results of the analytics could be also stored in a MongoDB database, adding it as another final sink in the Flink application. However, this function is not implemented in the coding part. (the upload schema is better described in the answer 3.1)
   
   
   The components I reused are:
@@ -124,19 +121,56 @@ It's also possible to train, once a week or month, a machine learning model on t
 ## Part 3 - Connection
 
 
-**1)**  If you would like the analytics results to be stored also into mysimbdp-coredms as the final sink, how would you modify the design and implement this (better to use a figure to explain your design).
+**1)  If you would like the analytics results to be stored also into mysimbdp-coredms as the final sink, how would you modify the design and implement this (better to use a figure to explain your design).**
     
   ![](schema_2.png)
+  
+  As shown in the schema, I would send the analytics on a new queue in RabbitMQ and than I would read them and ingest them using a python script called `analytics_uploader.py`
+  I chose this approach instead of the direct upload using a sink from the Flink app for 2 main reasons:
+  * with the queue approach we can exploit the backpressure feature of RabbitMQ
+  * we can decide to upload the file in batch, reducing the number of messages to send to MongoDB
     
-**2)**  Given the output of streaming analytics storedinmysimbdp-coredmsforalongtime. Explain a batch analytics (see also Part 1, question 1) that could be used to analyze such historical data. How would you implement it?
+**2) Given the output of streaming analytics storedinmysimbdp-coredmsforalongtime. Explain a batch analytics (see also Part 1, question 1) that could be used to analyze such historical data. How would you implement it?** 
+
+ The batch analytics would run every 24 hours. The system returns useful statistics such as:
+  * the most profitable zones -> it will return a dictionary containing every zone with the relative total profits
+  * the most profitable hours -> it will return a dictionary containing every hour of the day with the relative total profits (averaged on all the days)
+  * the most profitable days -> it will return a dictionary containing every day of the week with the relative total profits (averaged on all the weeks)
+
+
+  ![](schema_3_0.png)
+  
+  To perform the batch analytics, I will use Spark because is more suitable for this use case (it was designed for batch analytics). Since Spark and Hadoop HDFS allows to perform efficient parallel computation on large amounts of data and Flink is also compatible, for this application I would choose as database Hadoop HDFS instead of MongoDB.
+  The result of the analysis could be sent directly to the user or also stored on the database.
+  
+    
     
     
 **3)**   Assume that the streaming analytics detects a critical condition (e.g., a very high rate of alerts) that should trigger the execution of a batch analytics to analyze historical data. How would you extend your architecture in Part 1 to support this (use a figure to explain your work)?.
     
 ![](schema_3.png)
+
+I will launch from the Flink app a bash script that will start the Spark application. Every specific error will launch a specific bash script that will launch a specific batch analysis, passing some parameters.
     
 **4)**  If you want to scale your streaming analytics service for many customers and data, which components would you focus and which techniques you want to use?
     
+  I will focus main on these components:
+  
+  * I will scale the message broker (RabbitMQ) horizontally.
+  * I will configure an orchestrator, like Kubernetes and I will run on top of it Docker containers of Flink and Spark (if needed). Doing so, the system will be automatically able to scale according to some metrics (e.g. throughput).
+  
+  
     
 **5)**  Is it possible to achieve end-to-end exactly once delivery in your current implementation? If yes, explain why. If not, what could be conditions and changes to make it happen? If it is impossible to have end-to-end exactly once delivery in your view, explain why.
+
+Yes, it is possible. To obtain an at-least-once guarantee, we have to focused on three main points:
+
+* we have to use the acknowledgement mechanism functions offered by the RabbitMQ and Flink
+* we have to avoid duplicated messages (exploiting a deduplication mechanism)
+* we have to forbid parallelism
+
+The instruction to achieve exactly-once guarantees with the RabbitMQ source, provided by the [official documentation page](https://ci.apache.org/projects/flink/flink-docs-stable/dev/connectors/rabbitmq.html) of Flink, are the followings:
+* Enable checkpointing: With checkpointing enabled, messages are only acknowledged (hence, removed from the RabbitMQ queue) when checkpoints are completed.
+* Use correlation ids: Correlation ids are a RabbitMQ application feature. You have to set it in the message properties when injecting messages into RabbitMQ. The correlation id is used by the source to deduplicate any messages that have been reprocessed when restoring from a checkpoint.
+* Non-parallel source: The source must be non-parallel (parallelism set to 1) in order to achieve exactly-once. This limitation is mainly due to RabbitMQ’s approach to dispatching messages from a single queue to multiple consumers.
 
