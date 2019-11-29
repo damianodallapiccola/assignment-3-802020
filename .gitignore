@@ -1,2 +1,4 @@
 .idea
 code/customerstreamapp/target
+.DS_Store
+__pycache__
