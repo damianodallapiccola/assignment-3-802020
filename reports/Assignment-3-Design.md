@@ -129,12 +129,14 @@ It's also possible to train, once a week or month, a machine learning model on t
 
 **1)**  If you would like the analytics results to be stored also into mysimbdp-coredms as the final sink, how would you modify the design and implement this (better to use a figure to explain your design).
     
+  ![](schema_2.png)
     
 **2)**  Given the output of streaming analytics storedinmysimbdp-coredmsforalongtime. Explain a batch analytics (see also Part 1, question 1) that could be used to analyze such historical data. How would you implement it?
     
     
 **3)**   Assume that the streaming analytics detects a critical condition (e.g., a very high rate of alerts) that should trigger the execution of a batch analytics to analyze historical data. How would you extend your architecture in Part 1 to support this (use a figure to explain your work)?.
     
+![](schema_3.png)
     
 **4)**  If you want to scale your streaming analytics service for many customers and data, which components would you focus and which techniques you want to use?
     
