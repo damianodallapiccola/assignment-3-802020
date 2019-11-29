@@ -58,8 +58,12 @@ It's also possible to train, once a week or month, a machine learning model on t
   
   
 **4)  Explain which performance metrics would be important for the streaming analytics for your customer cases.**
- * throughput
- * Loss rate
+ 
+ TODO!
+ 
+ 
+ * Throughput -> only this
+ * Latency
   
 **5)  Provide a design of your architecture for the streaming analytics service in which you clarify: customer data sources, mysimbdp message brokers, mysimbdp streaming computing service, customer streaming analytics app, mysimbdp-coredms, and other components, if needed. Explain your choices of technologies for implementing your design and reusability of existing assignment works. Note that the result from customerstreamapp will be sent back to the customer in near real-time.**
   
