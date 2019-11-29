@@ -47,7 +47,7 @@ It's also possible to train, once a week or month, a machine learning model on t
 
   i) the analytics will handle keyed data streams (keyed by the zone of the pickup, **PULocationID**), allowing also a parallel analysis of the data, since the processing of each data related to a different **PULocationID** is indipendent.
   
-  ii) I will implement at-most-once delivery guarantee because in our case we can accept data losses and we will have also better performances (less resource usage for handle duplicated messages). Exactly-once delivery guarantee is of course suitable but, since is not strictly necessary, I decided to not implement it to reduce the complexity  and the resources needed.**
+  ii) I will implement at-most-once delivery guarantee because in our case we can accept data losses and we will have also better performances (less resource usage for handle duplicated messages). Exactly-once delivery guarantee is of course suitable but, since is not strictly necessary, I decided to not implement it to reduce the complexity  and the resources needed.
   
 **3) Given streaming data from the customer (selected before). Explain the following issues:(i) which types of time should be associated with stream sources for the analytics and be considered in stream processing (if the data sources have no timestamps associated with events, then what would be your solution), and (ii) which types of windows should be developed for the analytics (if no window, then why). Explain these aspects and give examples.**   
   
@@ -77,9 +77,9 @@ It's also possible to train, once a week or month, a machine learning model on t
   
   * **mysimbdp message brokers**: the message broker is represented by RabbitMQ. There will be two different queue for the client:
   
-  * "data_streaming" -> this queue receives all the messages from the customer data source and it will forward them to the streaming analytics service.
+    * "data_streaming" -> this queue receives all the messages from the customer data source and it will forward them to the streaming analytics service.
   
-  * "analytics_streaming" -> this queue receives the results of the analytics and it will forward them to the client frontend (`analytics_receiver.py`) where the data will be displayed (in our case printed on the terminal).
+    * "analytics_streaming" -> this queue receives the results of the analytics and it will forward them to the client frontend (`analytics_receiver.py`) where the data will be displayed (in our case printed on the terminal).
   
   This service offers also a back pressure mechanism to slow down automatically the stream if the consumer it not able to handle the stream speed.
   
@@ -97,9 +97,6 @@ It's also possible to train, once a week or month, a machine learning model on t
   * some readapted code used to write the scripts `stream_sender.py` and `analytics_receiver.py`
   * MongoDB deployed on Atlas MongoDB (not used in the implementation)
   
-  /usr/local/Cellar/apache-flink/1.9.1/libexec/bin/start-cluster.sh
-  
-  set localhost multiple times in the flink files
   
 ---  
 ## Part 2 - Implementation of streaming analytics
