@@ -1,6 +1,6 @@
 package fi.aalto.cs.cse4640;
 
-import org.apache.flink.api.common.functions.MapFunction;
+import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.api.common.serialization.SimpleStringSchema;
 import org.apache.flink.api.java.tuple.Tuple;
 import org.apache.flink.api.java.tuple.Tuple6;
@@ -25,8 +25,6 @@ public class CustomerStreamApp {
 
     public static void main(String[] args) throws Exception {
 
-        //using flink ParameterTool to parse input parameters
-        // final String input_rabbitMQ;
         final String input_rabbitMQ = "amqp://vsvgiedg:1T2CYKC2bwIYhKAXN8H1Xn0FNwguWAGB@hawk.rmq.cloudamqp.com/vsvgiedg";
         final String inputQueue = "data_streaming";
         final String outputQueue = "analytics_streaming";
@@ -65,8 +63,6 @@ public class CustomerStreamApp {
 
 
 
-        // datastream.print();
-
         // INPUT
         //         0                   1               2             3             4             5
         //tpep_pickup_datetime, passenger_count, trip_distance, PULocationID, DOLocationID, total_amount
@@ -77,20 +73,25 @@ public class CustomerStreamApp {
 
         // TODO: check if the data are fine with a filter
 
-        SingleOutputStreamOperator<Tuple6<Integer, Integer, Float, Integer, Integer, Float>> mapString = datastream.map(new MapFunction<String, Tuple6<Integer, Integer, Float, Integer, Integer, Float>>() {
+        SingleOutputStreamOperator<Tuple6<Integer, Integer, Float, Integer, Integer, Float>> mapString = datastream.flatMap(new FlatMapFunction<String, Tuple6<Integer, Integer, Float, Integer, Integer, Float>>() {
             @Override
-            public Tuple6<Integer, Integer, Float, Integer, Integer, Float> map(String s) {
-
+            public void flatMap(String s, Collector<Tuple6<Integer, Integer, Float, Integer, Integer, Float>> out) throws Exception {
                 String[] fieldArray = s.split(",");
-                Tuple6<Integer, Integer, Float, Integer, Integer, Float> out = new
-                        Tuple6<>(Integer.parseInt(fieldArray[0]), Integer.parseInt(fieldArray[1]), Float.parseFloat(fieldArray[2]), Integer.parseInt(fieldArray[3]),
-                        Integer.parseInt(fieldArray[4]),  Float.parseFloat(fieldArray[5]));
 
-
-
-                return out;
+                if(fieldArray.length == 6 && !fieldArray[0].contains("[a-zA-Z]+") && !fieldArray[1].contains("[a-zA-Z]+") && !fieldArray[2].contains("[a-zA-Z]+") && !fieldArray[3].contains("[a-zA-Z]+") && !fieldArray[4].contains("[a-zA-Z]+") && !fieldArray[5].contains("[a-zA-Z]+")){
+                    Tuple6<Integer, Integer, Float, Integer, Integer, Float> tuple = new
+                            Tuple6<>(Integer.parseInt(fieldArray[0]), Integer.parseInt(fieldArray[1]), Float.parseFloat(fieldArray[2]), Integer.parseInt(fieldArray[3]),
+                            Integer.parseInt(fieldArray[4]),  Float.parseFloat(fieldArray[5]));
+                    out.collect(tuple);
+                }
             }
         });
+
+
+
+
+
+
 
         SingleOutputStreamOperator<String> keyedStream = mapString.assignTimestampsAndWatermarks(new AscendingTimestampExtractor<Tuple6<Integer, Integer, Float, Integer, Integer, Float>>() {
             @Override
@@ -154,6 +155,7 @@ public class CustomerStreamApp {
                 connectionConfig,
                 outputQueue,
                 new SimpleStringSchema());
+
 
         keyedStream.addSink(sink);
 

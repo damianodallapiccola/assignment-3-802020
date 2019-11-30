@@ -13,6 +13,11 @@ Requirements:
 
 - Maven
 
+If you want to use another RabbitMQ deployment, instead of the one in the code (A CloudAMQP instance, https://www.cloudamqp.com/), change the reabbitMQ URI in:
+* `code/scripts/stream_sender.py`
+* `code/scripts/stream_sender_test_errors.py`
+* `code/scripts/analytics_reciever.py`
+* `code/customerstreamapp/src/main/java/fi/aalto/cs/cse4640/CustomerStreamApp.java`
 
 From the folder wher Flink is installed
  * if you want to change the number of Task Managers add them here `libexec/config/slaves`
@@ -52,3 +57,10 @@ From `assignment-3-802020/code/scripts` run
 python3 stream_sender.py <path_to_the_dataset>
  ```
 to run the stream sender
+
+To test the situation in which wrong data is sent from or is within data sources
+
+From `assignment-3-802020/code/scripts` run 
+ ```console
+python3 stream_sender_test_errors.py <path_to_the_dataset> <error rates (probability from 0 to 1)>
+ ```

@@ -113,7 +113,7 @@ After the elaboration of the data, is serialized again into json format using th
 { 
    "PULocationID":162,
    "initial_timestamp":1526389200,
-   "final_timestamp":1526390988,
+   "final_timestamp":1526392488,
    "total_passengers":459,
    "total_distance":607.8198,
    "total_amount":4434.3013
@@ -125,7 +125,7 @@ Finally, the json record is sent back through the `analytics_streaming` queue an
 
 **2) Explain the key logic of functions for processing events/records in customerstreamapp in your implementation.** 
 
-The input stream is mapped on a `Tuple6<Integer, Integer, Float, Integer, Integer, Float>`. After that is assigned a Watermark using the timestamp of the data (the first element of the Tupla) , needed because the time used for the windows is the event-time and not the processing-time. Then, the data are divided into differents streams based on the the pickup location (the 4th element of the Tupla -> PULocationID) using the `keyBy`. These streams are analyzed in groups defined by a tumbling windows of 1 hour. For each group of data is extracted:
+The input stream is mapped on a `Tuple6<Integer, Integer, Float, Integer, Integer, Float>` (using a `FlatMap`) and checking if the input data are valid (see question 2.4 for more details about the validity). After that is assigned a Watermark using the timestamp of the data (the first element of the Tupla) , needed because the time used for the windows is the event-time and not the processing-time. Then, the data are divided into different streams based on the the pickup location (the 4th element of the Tupla -> PULocationID) using the `keyBy`. These streams are analyzed in groups defined by a tumbling windows of 1 hour. For each group of data is extracted:
  * the city zone of the pickup (PULocationID) -> equal for every entry
  * the timestamp of the first and the last events in the window (initial_timestamp and final_timestamp) -> searching the min and the max iterating over all the elements
  * the total number of passenger during all the travels (total_passengers) -> summing the number of passenger over all the elements
@@ -136,9 +136,41 @@ The input stream is mapped on a `Tuple6<Integer, Integer, Float, Integer, Intege
 
 **3)  Run customer streamapp and show the operation of the customer streamapp with your test environments. Explain the test environments. Discuss the analytics and its performance observations.**
 
-Analytics returned to the customer by Flink:
+The analytics returned to the customer by Flink:
   ![](analytic_rec.png)
+  
+  Let's take the second line as example:
+
+ 
+   * PULocationID: 162 
+   * initial_timestamp: 1526389200 -> Tuesday 15 May 2018 13:00:00
+   * final_timestamp: 1526392488 -> Tuesday 15 May 2018 13:54:48
+   * total_passengers: 459
+   * total_distance: 607.8198
+   * total_amount: 4434.3013
+
+  From the zone number 162, the 15th of May between 13:00:00 and 13:54:48, 459 people have been transported, 607.8 miles travelled and 4434.30 $ earned.
+  
+  Test environment: the test environment consists in a data streaming created from a file csv (the speed could be changed modifying the sleep function in the script but in this case we are taking into account the event time and not the process time so is irrelevant), than serialized, transported using rabbitMQ to Flink. Than the data are analyzed  and returned back serialized (Json format), deserialized by the analytics_receiver and printed on the command line. 
+  
+  We can have some data about the queue from the web interface of rabbitMQ and some information about the processing from the web interface of Flink (see question 2.5)
+  
 **4) Present your tests and explain them for the situation in which wrong data is sent from or is within data sources. Report how your implementation deals with that (e.g., exceptions, failures, and decreasing performance). You should test with different error rates.**
+
+Test: I modified the stream_sender to send, with a settable probability (error rate), incorrect data to the queue (file called `stream_sender_test_errors.py`). Therefore, I tested my implementation running the test environment multiple times using `stream_sender_test_errors.py` (instead of `stream_sender.py`) with different error rates.
+The Flink app has a validation control on the input data (inside the `FlatMap`): the input string should be a csv line, formed by 6 elements, all of them numerical. If this is false, the input data is discarded.
+
+
+`Input with errors`
+![](input.png)
+
+
+`Input filtered by the FlatMap`
+![](input_filtered.png)
+
+
+From my tests, with different error rates, I noticed only a small decrease of performance, probably due to the additional computation.
+
 
 
 
