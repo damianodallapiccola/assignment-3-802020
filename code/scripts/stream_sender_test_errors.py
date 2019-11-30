@@ -1,7 +1,6 @@
 import sys
 import pika
 import os
-from time import sleep
 import logging
 from random import random
 
