@@ -1,0 +1,186 @@
+commit c3c9193199409b925698502e2671e2219953b409
+Author: damianodallapiccola <damiano.dallapiccola@gmail.com>
+Date:   Sun Dec 1 02:01:22 2019 +0200
+
+    added requirements.txt
+
+commit 086255d45338916391207f461cff1b7c6c6d451c
+Author: damianodallapiccola <damiano.dallapiccola@gmail.com>
+Date:   Sun Dec 1 02:01:07 2019 +0200
+
+    small fixes
+
+commit 996f2fb29d37238d154c2f0b183fe04ccb4d00ca
+Author: damianodallapiccola <damiano.dallapiccola@gmail.com>
+Date:   Sun Dec 1 01:53:52 2019 +0200
+
+    small fixes
+
+commit 4de9f73874139159c3f09700822c5d77182fd940
+Author: damianodallapiccola <damiano.dallapiccola@gmail.com>
+Date:   Sun Dec 1 01:49:22 2019 +0200
+
+    small fixes
+
+commit afc5e11895d018e0a0b744f2c47d67e6c7e8ccb5
+Author: damianodallapiccola <damiano.dallapiccola@gmail.com>
+Date:   Sun Dec 1 00:39:26 2019 +0200
+
+    added input filter
+
+commit 8b052d1a9f38fe9df0d33019310c1968fcb20d2f
+Author: Damiano Dallapiccola <32510242+damianodallapiccola@users.noreply.github.com>
+Date:   Fri Nov 29 09:15:12 2019 +0200
+
+    Delete .DS_Store
+
+commit e671db30a238bb84757242aace3bd9b9f7dbf79f
+Author: Damiano Dallapiccola <32510242+damianodallapiccola@users.noreply.github.com>
+Date:   Fri Nov 29 09:14:51 2019 +0200
+
+    Delete .DS_Store
+
+commit 651f9cff1e25ebfbc69cb35697783d3d9e5039e3
+Author: damianodallapiccola <damiano.dallapiccola@gmail.com>
+Date:   Fri Nov 29 09:13:22 2019 +0200
+
+    fix
+
+commit 96201750d0c1d230b82acd127e82193e1d1f7c1d
+Author: damianodallapiccola <damiano.dallapiccola@gmail.com>
+Date:   Fri Nov 29 09:07:58 2019 +0200
+
+    logs
+
+commit 549b66be6ebf26b1edd1d856d39d224ed506718f
+Author: damianodallapiccola <damiano.dallapiccola@gmail.com>
+Date:   Fri Nov 29 09:07:40 2019 +0200
+
+    small fixes
+
+commit d2d12ba8729712dc59d6d42e9a8d6c6105ba3e18
+Author: damianodallapiccola <damiano.dallapiccola@gmail.com>
+Date:   Fri Nov 29 06:49:32 2019 +0200
+
+    report update
+
+commit cc1bee0b02d54089cd0fa1780d6c0e6bac2e4982
+Author: damianodallapiccola <damiano.dallapiccola@gmail.com>
+Date:   Fri Nov 29 05:51:50 2019 +0200
+
+    report updated
+
+commit 743e3af955587df6ad9f7b7ef8e37a50852bfd11
+Author: damianodallapiccola <damiano.dallapiccola@gmail.com>
+Date:   Fri Nov 29 04:01:26 2019 +0200
+
+    added images
+
+commit cd11371e41d4f837d3aca96d1260abd63cdba22e
+Author: damianodallapiccola <damiano.dallapiccola@gmail.com>
+Date:   Fri Nov 29 03:57:22 2019 +0200
+
+    added figures
+
+commit dcd63833d3b50e04352ac899ab06bb92d2e2434a
+Author: damianodallapiccola <damiano.dallapiccola@gmail.com>
+Date:   Fri Nov 29 03:09:36 2019 +0200
+
+    report update
+
+commit e92b519becee3c395cab275d451edc40c8496e19
+Author: damianodallapiccola <damiano.dallapiccola@gmail.com>
+Date:   Fri Nov 29 02:54:30 2019 +0200
+
+    report update
+
+commit 7287d432f9c6ca2e4659912df9c4c6ae9991b735
+Author: damianodallapiccola <damiano.dallapiccola@gmail.com>
+Date:   Fri Nov 29 00:32:14 2019 +0200
+
+    report update
+
+commit 78ecb38dbf5312d8936fabc11484c90177141250
+Author: damianodallapiccola <damiano.dallapiccola@gmail.com>
+Date:   Thu Nov 28 17:59:10 2019 +0200
+
+    removed datasets
+
+commit cbd54b5508f4c70512d54524098a606d6315031c
+Author: damianodallapiccola <damiano.dallapiccola@gmail.com>
+Date:   Thu Nov 28 17:58:28 2019 +0200
+
+    working flink
+
+commit 5721c7d5750b7d3643ce417725ccd3ae0967ddf1
+Author: damianodallapiccola <damiano.dallapiccola@gmail.com>
+Date:   Wed Nov 27 18:35:36 2019 +0200
+
+    small fixes
+
+commit 7fd412d56965ccc40d0a678cc780c0a7b989fcdc
+Author: damianodallapiccola <damiano.dallapiccola@gmail.com>
+Date:   Wed Nov 27 18:31:29 2019 +0200
+
+    customer app first draft
+
+commit a668e38d3abb7c8a4b42f24f05e6b970354895aa
+Author: damianodallapiccola <damiano.dallapiccola@gmail.com>
+Date:   Wed Nov 27 15:03:31 2019 +0200
+
+    file rearrangement
+
+commit 59fb26dc3b015349ace8be6358e08f854d275590
+Author: damianodallapiccola <damiano.dallapiccola@gmail.com>
+Date:   Wed Nov 27 15:02:59 2019 +0200
+
+    added analytics receiver
+
+commit 4f58b816cea4364ca5497427ab525077d30a225a
+Author: damianodallapiccola <damiano.dallapiccola@gmail.com>
+Date:   Wed Nov 27 14:47:57 2019 +0200
+
+    added gitignore
+
+commit 4c86fe578f80a1ced240e80d667b47d2f7e00939
+Author: damianodallapiccola <damiano.dallapiccola@gmail.com>
+Date:   Wed Nov 27 14:47:46 2019 +0200
+
+    added stream sender
+
+commit fd99ddc4c1362a8c62e7205cb8cc9a85d547e3b4
+Author: damianodallapiccola <damiano.dallapiccola@gmail.com>
+Date:   Wed Nov 27 14:47:25 2019 +0200
+
+    assignment text
+
+commit 9b836c6f863b4945aa879ce94b5d86aa53bfd6a9
+Author: damianodallapiccola <damiano.dallapiccola@gmail.com>
+Date:   Wed Nov 27 14:46:47 2019 +0200
+
+    added java code
+
+commit 7368cfded2c99d3ff66542040bb53ac62256d9f7
+Merge: e560d78 fbc32e3
+Author: damianodallapiccola <damiano.dallapiccola@gmail.com>
+Date:   Wed Nov 27 14:41:30 2019 +0200
+
+    Merge remote-tracking branch 'origin/master'
+
+commit e560d7890dde86c6a8a37bc7512b2c2ff2a45aa9
+Author: damianodallapiccola <damiano.dallapiccola@gmail.com>
+Date:   Wed Nov 27 14:40:44 2019 +0200
+
+    file rearrangement
+
+commit fbc32e3f9a911d1c369a7e98e302b7978a4c8d21
+Author: Damiano Dallapiccola <32510242+damianodallapiccola@users.noreply.github.com>
+Date:   Mon Nov 25 14:36:15 2019 +0200
+
+    Delete .DS_Store
+
+commit bede029e277373c6465fdafe4accfec824f587ea
+Author: damianodallapiccola <damiano.dallapiccola@gmail.com>
+Date:   Mon Nov 25 14:33:33 2019 +0200
+
+    initial commit
