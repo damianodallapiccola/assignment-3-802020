@@ -11,8 +11,7 @@ logs_dir_full_path = os.path.abspath(logs_directory)
 logging.basicConfig(filename= logs_dir_full_path , filemode="a", level= logging.INFO, format=log_format)
 
 
-# rabbit_uri = 'amqp://guest:guest@localhost/'
-rabbit_uri = 'amqp://vsvgiedg:1T2CYKC2bwIYhKAXN8H1Xn0FNwguWAGB@hawk.rmq.cloudamqp.com/vsvgiedg'
+rabbit_uri = 'amqp://guest:guest@localhost/'
 
 params = pika.URLParameters(rabbit_uri)
 queue = 'data_streaming'

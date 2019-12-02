@@ -32,46 +32,31 @@ public class CustomerStreamApp {
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         SimpleStringSchema inputSchema =new SimpleStringSchema();
 
-        //checkpoint can be used for  different levels of message guarantees
-        // select one of the following modes
+        //checkpoint for different levels of message guarantees
         //final CheckpointingMode checkpointingMode = CheckpointingMode.EXACTLY_ONCE ;
-        //final CheckpointingMode checkpointingMode = CheckpointingMode.AT_LEAST_ONCE;
         //env.enableCheckpointing(1000*60, checkpointingMode);
 
         // define the event time
         env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
 
         final RMQConnectionConfig connectionConfig = new 	RMQConnectionConfig.Builder()
-//                .setHost("localhost")
-//                .setPort(5672)
-//                .setUserName("guest")
-//                .setPassword("guest")
-//                .setVirtualHost("/")
-                .setUri(input_rabbitMQ)
+                .setHost("localhost")
+                .setPort(5672)
+                .setUserName("guest")
+                .setPassword("guest")
+                .setVirtualHost("/")
                 .build();
 
         RMQSource<String> datasource= new RMQSource(
                 connectionConfig,            // config for the RabbitMQ connection
                 inputQueue,                 // name of the RabbitMQ queue to consume
-                false,       // no correlation between event
+                false,
                 inputSchema);
 
 
         final DataStream<String> datastream = env
                 .addSource(datasource)   // deserialization schema for input
                 .setParallelism(1);
-
-
-
-        // INPUT
-        //         0                   1               2             3             4             5
-        //tpep_pickup_datetime, passenger_count, trip_distance, PULocationID, DOLocationID, total_amount
-
-        // OUTPUT
-        //     0                1                 2                3                4              5
-        //PULocationID, initial_timestamp, final_timestamp, total_passengers, total_distance, total_amount
-
-        // TODO: check if the data are fine with a filter
 
         SingleOutputStreamOperator<Tuple6<Integer, Integer, Float, Integer, Integer, Float>> mapString = datastream.flatMap(new FlatMapFunction<String, Tuple6<Integer, Integer, Float, Integer, Integer, Float>>() {
             @Override
@@ -86,11 +71,6 @@ public class CustomerStreamApp {
                 }
             }
         });
-
-
-
-
-
 
 
         SingleOutputStreamOperator<String> keyedStream = mapString.assignTimestampsAndWatermarks(new AscendingTimestampExtractor<Tuple6<Integer, Integer, Float, Integer, Integer, Float>>() {
@@ -122,7 +102,7 @@ public class CustomerStreamApp {
                         float total_distance = 0;
                         float total_amount = 0;
 
-                        // System.out.println("apply");
+      
 
                         for (Tuple6<Integer, Integer, Float, Integer, Integer, Float> next : iterable) {
 
@@ -149,8 +129,6 @@ public class CustomerStreamApp {
         }).setParallelism(4);
 
 
-
-        //send the alerts to another channel
         RMQSink<String> sink =new RMQSink<String>(
                 connectionConfig,
                 outputQueue,
