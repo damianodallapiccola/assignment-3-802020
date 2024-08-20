@@ -82,16 +82,16 @@ under the License.
 			<artifactId>flink-streaming-java_${scala.binary.version}</artifactId>
 			<version>${flink.version}</version>
 			<scope>provided</scope>
-			</dependency>
-			<dependency>
+		</dependency>
+		<dependency>
   		<groupId>org.apache.flink</groupId>
   		<artifactId>flink-connector-rabbitmq_2.11</artifactId>
   		<version>1.9.0</version>
 		</dependency>
 		<dependency>
-				<groupId>org.apache.commons</groupId>
-				<artifactId>commons-csv</artifactId>
-				<version>1.7</version>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-csv</artifactId>
+			<version>1.7</version>
 		</dependency>
 
 		<!-- Add logging framework, to produce console output when running in the IDE. -->
@@ -102,10 +102,17 @@ under the License.
 			<version>1.7.7</version>
 			<scope>runtime</scope>
 		</dependency>
+		<!-- Updated to use Log4j 2.23.1 instead of the vulnerable 1.2.17 version -->
 		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>1.2.17</version>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>2.23.1</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-api</artifactId>
+			<version>2.23.1</version>
 			<scope>runtime</scope>
 		</dependency>
 	</dependencies>
